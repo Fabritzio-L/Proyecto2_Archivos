@@ -1,0 +1,37 @@
+[
+    {
+        "id": 1,
+        "nombre": "Juan Lopez",
+        "telefono": "12345678",
+        "correo": "jjuanl@gmail.com",
+        "ciudad": "Quetzaltenango"
+    },
+    {
+        "id": 2,
+        "nombre": "Maria Sanchez",
+        "telefono": "78965412",
+        "correo": "sanchezmaria@outlook.com",
+        "ciudad": "San Marcos"
+    },
+    {
+        "id": 3,
+        "nombre": "José Barrios",
+        "telefono": "12547850",
+        "correo": "josbarr@gmail.com",
+        "ciudad": "Ciudad de Guatemala"
+    },
+    {
+        "id": 4,
+        "nombre": "Pedro Ordoñez",
+        "telefono": "89654035",
+        "correo": "pedroooordoñezz@outlook.com",
+        "ciudad": "Quetzaltenango"
+    },
+    {
+        "id": 5,
+        "nombre": "Sofía Morales",
+        "telefono": "00452399",
+        "correo": "sofimorales@gmail.com",
+        "ciudad": "Antigua Guatemala"
+    }
+]

@@ -8,8 +8,8 @@ from contacto import Contacto
 class ServicioExportacion:
     def __init__(
         self,
-        ruta_json: str = "exports/contactos_exportados.json",
-        ruta_pdf: str = "exports/reporte_contactos.pdf",
+        ruta_json: str = "exportados/contactos_exportados.json",
+        ruta_pdf: str = "exportados/reporte_contactos.pdf",
     ):
         self.ruta_json = ruta_json
         self.ruta_pdf = ruta_pdf

@@ -8,7 +8,7 @@ class ServicioArchivosSistema:
         self.ruta_datos = ruta_datos
         self.ruta_indice = ruta_indice
 
-    def crear_respaldo_zip(self, carpeta_destino: str = "exports"):
+    def crear_respaldo_zip(self, carpeta_destino: str = "exportados"):
         #Comprime contactos.dat e indice.json y retorna los tamaños original y comprimido
         if not os.path.exists(self.ruta_datos) or not os.path.exists(self.ruta_indice):
             raise FileNotFoundError("Deben existir contactos.dat e indice.json para crear el respaldo.")
