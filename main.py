@@ -1,8 +1,8 @@
-import ventana_principal
+from UI.ventana_principal import VentanaPrincipal
 
 
 def main():
-    app = ventana_principal.VentanaPrincipal()
+    app = VentanaPrincipal()
     app.after(200, lambda: app.on_verificar_integridad(silencioso=True))
     app.mainloop()
 

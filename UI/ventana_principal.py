@@ -1,12 +1,12 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 
-from contacto import Contacto
-from gestor_indice import GestorIndice
-from gestor_archivos import GestorArchivos
-from servicio_integridad import ServicioIntegridad
-from servicio_archivos_sistema import ServicioArchivosSistema
-from servicio_exportacion import ServicioExportacion
+from models.contacto import Contacto
+from persistencia.gestor_indice import GestorIndice
+from persistencia.gestor_archivos import GestorArchivos
+from servicios.servicio_integridad import ServicioIntegridad
+from servicios.servicio_archivos_sistema import ServicioArchivosSistema
+from servicios.servicio_exportacion import ServicioExportacion
 
 
 PALETAS = {
@@ -142,7 +142,7 @@ class VentanaPrincipal(tk.Tk):
         ttk.Label(box_titulos, text="AGENDA DE CONTACTOS", style="HeaderTitle.TLabel").pack(anchor="w")
         ttk.Label(
             box_titulos,
-            text="Gestión de Archivos de Tamaño Fijo (120 Bytes) • Índice Primario JSON • Acceso Directo seek() / tell()",
+            text="Gestión de Archivos",
             style="SubTitle.TLabel",
         ).pack(anchor="w", pady=(2, 0))
 
@@ -170,8 +170,8 @@ class VentanaPrincipal(tk.Tk):
         self.frame_kpis.columnconfigure((0, 1, 2, 3), weight=1)
 
         self._crear_kpi_card(self.frame_kpis, 0, "NÚMERO DE REGISTRO", self.var_num_registro, "Posición en índice JSON")
-        self._crear_kpi_card(self.frame_kpis, 1, "PUNTERO tell() / seek()", self.var_offset_tell, "Desplazamiento exacto")
-        self._crear_kpi_card(self.frame_kpis, 2, "LONGITUD DE BLOQUE", self.var_tamano_fijo, "Relleno fijo con ljust()")
+        self._crear_kpi_card(self.frame_kpis, 1, "PUNTERO tell/seek", self.var_offset_tell, "Desplazamiento exacto")
+        self._crear_kpi_card(self.frame_kpis, 2, "LONGITUD DE BLOQUE", self.var_tamano_fijo, "Relleno fijo con ljust")
         self._crear_kpi_card(self.frame_kpis, 3, "INTEGRIDAD SHA-256", self.var_estado_hash, "Huella de contactos.dat")
 
         # 3. COLUMNA IZQUIERDA: FORMULARIO + INSPECTOR DE BLOQUE FIJO
@@ -198,7 +198,7 @@ class VentanaPrincipal(tk.Tk):
         self.entry_id = ttk.Entry(box_id, textvariable=self.var_id, font=("Consolas", 10, "bold"))
         self.entry_id.grid(row=0, column=0, sticky="ew", padx=(0, 8), ipady=3)
         ttk.Button(
-            box_id, text="Buscar con seek()", style="Accent.TButton", cursor="hand2", command=self.on_buscar_contacto
+            box_id, text="Buscar con seek", style="Accent.TButton", cursor="hand2", command=self.on_buscar_contacto
         ).grid(row=0, column=1)
 
         campos_meta = [
@@ -235,7 +235,7 @@ class VentanaPrincipal(tk.Tk):
 
         ttk.Label(
             card_raw,
-            text="Vista Previa de Registro Fijo (120 Bytes • '·' representa espacio de relleno)",
+            text="Vista Previa de Registro Fijo (120 Bytes - '·' representa espacio de relleno)",
             style="SectionTitle.TLabel",
         ).grid(row=0, column=0, sticky="w", pady=(0, 6))
 
@@ -263,7 +263,7 @@ class VentanaPrincipal(tk.Tk):
 
         ttk.Label(
             header_indice,
-            text="Índice Primario en Vivo (indice.json — Doble clic para hacer seek)",
+            text="Índice Primario en Vivo",
             style="SectionTitle.TLabel",
         ).grid(row=0, column=0, sticky="w")
         ttk.Button(
@@ -274,7 +274,7 @@ class VentanaPrincipal(tk.Tk):
         self.tabla_indice = ttk.Treeview(card_indice, columns=columnas, show="headings", height=6)
         self.tabla_indice.heading("id", text="ID Contacto")
         self.tabla_indice.heading("num_reg", text="Núm. Registro")
-        self.tabla_indice.heading("offset_bytes", text="Offset seek() en Archivo")
+        self.tabla_indice.heading("offset_bytes", text="Ubicacion")
 
         self.tabla_indice.column("id", width=100, anchor="center")
         self.tabla_indice.column("num_reg", width=110, anchor="center")
@@ -297,7 +297,7 @@ class VentanaPrincipal(tk.Tk):
         header_bitacora.grid(row=0, column=0, sticky="ew", pady=(0, 6))
         header_bitacora.columnconfigure(0, weight=1)
 
-        ttk.Label(header_bitacora, text="Bitácora de Punteros y Operaciones de E/S", style="SectionTitle.TLabel").grid(
+        ttk.Label(header_bitacora, text="Bitácora de Punteros y Operaciones", style="SectionTitle.TLabel").grid(
             row=0, column=0, sticky="w"
         )
         ttk.Button(
@@ -510,7 +510,7 @@ class VentanaPrincipal(tk.Tk):
             self.var_offset_tell.set(f"{pos_tell} B")
             self._mostrar_bloque_raw(contacto)
 
-            self.registrar_evento(f"Acceso directo ID {datos['id']} -> Reg #{num_reg} | seek/tell = {pos_tell} bytes.")
+            self.registrar_evento(f"Acceso directo ID {datos['id']} - Registro #{num_reg} | seek/tell = {pos_tell} bytes.")
         except KeyError as e:
             self.registrar_evento(f"Búsqueda fallida: ID {datos['id']} no existe en indice.json.")
             messagebox.showwarning("ID no encontrado", str(e).strip("'"))
@@ -615,7 +615,7 @@ class VentanaPrincipal(tk.Tk):
 
         p = PALETAS[self.tema_actual]
         ventana = tk.Toplevel(self)
-        ventana.title("Metadatos y Permisos (os.stat / os.access)")
+        ventana.title("Metadatos y Permisos")
         ventana.geometry("440x270")
         ventana.resizable(False, False)
         ventana.configure(bg=p["bg_main"])
@@ -632,10 +632,10 @@ class VentanaPrincipal(tk.Tk):
         filas = [
             ("Ruta del archivo:", meta["archivo"]),
             ("Estado en disco:", "Creado y disponible" if meta["existe"] else "No existe aún"),
-            ("Tamaño exacto (os.stat):", f"{meta['tamano_bytes']} bytes"),
+            ("Tamaño exacto:", f"{meta['tamano_bytes']} bytes"),
             ("Última modificación:", meta["ultima_modificacion"]),
-            ("Permiso Lectura (R_OK):", "Concedido" if meta["permiso_lectura"] else "✖ Denegado"),
-            ("Permiso Escritura (W_OK):", "Concedido" if meta["permiso_escritura"] else "✖ Denegado"),
+            ("Permiso Lectura:", "Concedido" if meta["permiso_lectura"] else "✖ Denegado"),
+            ("Permiso Escritura:", "Concedido" if meta["permiso_escritura"] else "✖ Denegado"),
         ]
 
         for idx, (etiq, val) in enumerate(filas, start=1):
@@ -649,13 +649,13 @@ class VentanaPrincipal(tk.Tk):
     def on_mostrar_ayuda(self):
         mensaje = (
             f"Estructura Documentada del Registro ({Contacto.TAMANO_REGISTRO} bytes en UTF-8):\n\n"
-            f"• ID: {Contacto.LEN_ID} bytes\n"
-            f"• Nombre: {Contacto.LEN_NOMBRE} bytes\n"
-            f"• Teléfono: {Contacto.LEN_TELEFONO} bytes\n"
-            f"• Correo: {Contacto.LEN_CORREO} bytes\n"
-            f"• Ciudad: {Contacto.LEN_CIUDAD} bytes\n\n"
+            f"- ID: {Contacto.LEN_ID} bytes\n"
+            f"- Nombre: {Contacto.LEN_NOMBRE} bytes\n"
+            f"- Teléfono: {Contacto.LEN_TELEFONO} bytes\n"
+            f"- Correo: {Contacto.LEN_CORREO} bytes\n"
+            f"- Ciudad: {Contacto.LEN_CIUDAD} bytes\n\n"
             "Cálculo de Acceso Directo:\n"
-            "offset_bytes = numero_registro * 120"
+            "numero_registro * 120"
         )
         messagebox.showinfo("Estructura del Registro", mensaje)
 

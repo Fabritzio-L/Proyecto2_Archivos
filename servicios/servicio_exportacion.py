@@ -2,7 +2,7 @@ import json
 import os
 from datetime import datetime
 from reportlab.pdfgen import canvas
-from contacto import Contacto
+from models.contacto import Contacto
 
 
 class ServicioExportacion:

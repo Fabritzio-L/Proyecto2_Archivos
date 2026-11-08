@@ -1,6 +1,6 @@
 import os
-from contacto import Contacto
-from gestor_indice import GestorIndice
+from models.contacto import Contacto
+from persistencia.gestor_indice import GestorIndice
 
 
 class GestorArchivos:
@@ -26,7 +26,7 @@ class GestorArchivos:
                 posicion_bytes = archivo.tell()
 
                 if posicion_bytes % Contacto.TAMANO_REGISTRO != 0:
-                    raise RuntimeError("El archivo contactos.dat está corrupto (tamaño descuadrado).")
+                    raise RuntimeError("El archivo contactos.dat está corrupto.")
 
                 numero_registro = posicion_bytes // Contacto.TAMANO_REGISTRO
                 datos_utf8 = contacto.a_registro_fijo().encode("utf-8")
@@ -81,7 +81,7 @@ class GestorArchivos:
         except PermissionError as e:
             raise PermissionError("No hay permisos de escritura en contactos.dat.") from e
 
-    def listar_todos(self) -> list[Contacto]:
+    def listar_todos(self):
         #Recorre los registros registrados en el índice para exportaciones JSON/PDF
         indice = self.gestor_indice.cargar_indice()
         contactos = []

@@ -15,7 +15,7 @@ class Contacto:
 
     @staticmethod
     def _ajustar_campo(valor: str, largo_bytes: int):
-        #Trunca si excede el máximo y rellena con espacios usando ljust
+        #Si excede el máximo y rellena con espacios usando ljust
         texto = str(valor).strip()
         while len(texto.encode("utf-8")) > largo_bytes:
             texto = texto[:-1]
